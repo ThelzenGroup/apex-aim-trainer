@@ -13,6 +13,7 @@ godot --headless --path . --export-release "Windows" build/windows/ApexAimLab.ex
 
 - **Check the exported content.** Run this from outside the repo, so that the project folder isn't picked up instead of the build:
   `godot --headless --main-pack <repo>/build/windows/ApexAimLab.exe --quit-after 120 res://scenes/lab/load_lab.tscn`
+- **Logs from the test PC.** Unzip them outside the repo, then run `python3 -I tools/analyze_logs.py <folder> [--windows 6]`. Record outcomes in `reports/First week test results.md`.
 - **Screenshots.** `--headless` never renders, so use Xvfb and the software GL renderer, then read the PNG frames:
   `xvfb-run -a -s "-screen 0 1280x720x24" godot --path . --rendering-method gl_compatibility --rendering-driver opengl3 --write-movie /tmp/shot.png --fixed-fps 30 --quit-after 45 res://scenes/lab/load_lab.tscn`
 

@@ -5,9 +5,12 @@ extends Node
 ## one CSV row per frame to user://logs/ plus a JSON file describing the PC and settings,
 ## so a session on the test PC can be sent back and analysed.
 ##
-## Each row also splits the frame into CPU work (scripts and animation, physics, render
-## submission) and GPU time, so slow frames can be traced to their cause. Godot reports the
-## render and GPU times one or two frames late, which doesn't matter for statistics.
+## Each row also splits the frame into CPU work (scripts and animation, physics scripts,
+## render submission) and GPU time, so slow frames can be traced to their cause. Script
+## time is measured here, per frame, between this node (which processes first) and a
+## child that processes last; Godot's own Performance.TIME_PROCESS is the worst step of
+## the last second, not a per-frame value. Render and GPU times arrive a frame or two late,
+## which doesn't matter for statistics.
 
 const WINDOW_FRAMES := 2000
 
@@ -30,13 +33,41 @@ var _events_per_second := 0
 var _viewport_rid: RID
 ## Smoothed timings in ms, for the HUD.
 var _avg := {"process": 0.0, "physics": 0.0, "render_cpu": 0.0, "gpu": 0.0}
+var _process_start := 0
+var _process_usec := 0  ## the last finished process step (scripts and animation)
+var _physics_start := 0
+var _physics_usec := 0  ## physics-tick scripts since the last process step
+
+
+## Processes after every other node, closing the timing windows Telemetry opens.
+class _FrameEnd:
+	extends Node
+	var telemetry: Node
+
+	func _process(_delta: float) -> void:
+		telemetry._process_usec = Time.get_ticks_usec() - telemetry._process_start
+
+	func _physics_process(_delta: float) -> void:
+		telemetry._physics_usec += Time.get_ticks_usec() - telemetry._physics_start
 
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	process_priority = -1_000_000
+	process_physics_priority = -1_000_000
+	var frame_end := _FrameEnd.new()
+	frame_end.telemetry = self
+	frame_end.process_mode = Node.PROCESS_MODE_ALWAYS
+	frame_end.process_priority = 1_000_000
+	frame_end.process_physics_priority = 1_000_000
+	add_child(frame_end)
 	_ring.resize(WINDOW_FRAMES)
 	_viewport_rid = get_viewport().get_viewport_rid()
 	RenderingServer.viewport_set_measure_render_time(_viewport_rid, true)
+
+
+func _physics_process(_delta: float) -> void:
+	_physics_start = Time.get_ticks_usec()
 
 
 ## Called by the look controller for every mouse motion event.
@@ -48,9 +79,11 @@ func add_mouse(counts: Vector2) -> void:
 
 func _process(_delta: float) -> void:
 	var now := Time.get_ticks_usec()
+	# A row covers the interval since the previous process step began: that step's scripts
+	# and animation, its rendering, and the physics ticks that ran since.
 	var timing := {
-		"process": Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0,
-		"physics": Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS) * 1000.0,
+		"process": _process_usec / 1000.0,
+		"physics": _physics_usec / 1000.0,
 		"render_cpu": RenderingServer.viewport_get_measured_render_time_cpu(_viewport_rid)
 			+ RenderingServer.get_frame_setup_time_cpu(),
 		"gpu": RenderingServer.viewport_get_measured_render_time_gpu(_viewport_rid),
@@ -69,6 +102,8 @@ func _process(_delta: float) -> void:
 	_frame += 1
 	_counts = Vector2.ZERO
 	_events = 0
+	_physics_usec = 0
+	_process_start = Time.get_ticks_usec()
 	if now - _second_start >= 1_000_000:
 		_events_per_second = roundi(_second_events * 1e6 / (now - _second_start))
 		_second_events = 0
