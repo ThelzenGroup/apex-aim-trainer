@@ -14,7 +14,7 @@ The engine report (`reports/Unity vs Godot for aim trainer.md`) picks Godot on t
 Logs go to `%APPDATA%\Godot\app_userdata\Apex Aim Lab\logs`; the menu's **Open the logs folder** button opens it.
 
 - Press **L** in any lab to start or stop a log.
-- Each log is a CSV with one row per frame (frame time, raw mouse counts, events) plus a JSON file describing your PC and settings.
+- Each log is a CSV with one row per frame plus a JSON file describing your PC and settings. A row holds the frame time, raw mouse counts and events, and how the frame's time split between CPU work (scripts and animation, physics, render) and the GPU.
 
 ## Before you start
 
@@ -95,6 +95,7 @@ The lab starts with 30 strafing dummies and an emitter firing 500 bullets per se
 - **[** and **]** change the number of bots.
 - **H** shows the hitboxes.
 - **Bullet hit tests** shows how many milliseconds bullet collision costs per physics tick.
+- The **CPU / GPU** line shows where each frame's time goes. If 1% lows dip below your refresh rate, this line says whether the CPU or the graphics card is the limit.
 
 Bullet speed, recoil and bot movement are placeholders, not Apex data yet.
 

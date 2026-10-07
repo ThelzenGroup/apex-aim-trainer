@@ -4,6 +4,10 @@ extends Node
 ## Keeps a rolling window of frame times for the on-screen stats. While recording, writes
 ## one CSV row per frame to user://logs/ plus a JSON file describing the PC and settings,
 ## so a session on the test PC can be sent back and analysed.
+##
+## Each row also splits the frame into CPU work (scripts and animation, physics, render
+## submission) and GPU time, so slow frames can be traced to their cause. Godot reports the
+## render and GPU times one or two frames late, which doesn't matter for statistics.
 
 const WINDOW_FRAMES := 2000
 
@@ -23,11 +27,16 @@ var _events := 0
 var _second_start := 0
 var _second_events := 0
 var _events_per_second := 0
+var _viewport_rid: RID
+## Smoothed timings in ms, for the HUD.
+var _avg := {"process": 0.0, "physics": 0.0, "render_cpu": 0.0, "gpu": 0.0}
 
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_ring.resize(WINDOW_FRAMES)
+	_viewport_rid = get_viewport().get_viewport_rid()
+	RenderingServer.viewport_set_measure_render_time(_viewport_rid, true)
 
 
 ## Called by the look controller for every mouse motion event.
@@ -39,13 +48,23 @@ func add_mouse(counts: Vector2) -> void:
 
 func _process(_delta: float) -> void:
 	var now := Time.get_ticks_usec()
+	var timing := {
+		"process": Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0,
+		"physics": Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS) * 1000.0,
+		"render_cpu": RenderingServer.viewport_get_measured_render_time_cpu(_viewport_rid)
+			+ RenderingServer.get_frame_setup_time_cpu(),
+		"gpu": RenderingServer.viewport_get_measured_render_time_gpu(_viewport_rid),
+	}
+	for key: String in timing:
+		_avg[key] = lerpf(_avg[key], timing[key], 0.02)
 	if _last_usec != 0:
 		var ms := (now - _last_usec) / 1000.0
 		_ring[_ring_next % WINDOW_FRAMES] = ms
 		_ring_next += 1
 		if recording:
-			_file.store_line("%d,%.6f,%.4f,%d,%d,%d,%s" % [
-				_frame, (now - _start_usec) / 1e6, ms, _counts.x, _counts.y, _events, note])
+			_file.store_line("%d,%.6f,%.4f,%d,%d,%d,%.4f,%.4f,%.4f,%.4f,%s" % [
+				_frame, (now - _start_usec) / 1e6, ms, _counts.x, _counts.y, _events,
+				timing["process"], timing["physics"], timing["render_cpu"], timing["gpu"], note])
 	_last_usec = now
 	_frame += 1
 	_counts = Vector2.ZERO
@@ -82,7 +101,8 @@ func stats() -> Dictionary:
 
 func stats_line() -> String:
 	var s := stats()
-	return "FPS %d avg · 1%% low %d · worst frame %.2f ms" % [s["fps"], s["low_1"], s["worst_ms"]]
+	return "FPS %d avg · 1%% low %d · worst frame %.2f ms\nCPU: scripts + animation %.2f ms · physics %.2f ms · render %.2f ms · GPU %.2f ms" % [
+		s["fps"], s["low_1"], s["worst_ms"], _avg["process"], _avg["physics"], _avg["render_cpu"], _avg["gpu"]]
 
 
 func toggle_recording(label: String) -> void:
@@ -99,7 +119,7 @@ func start_recording(label: String) -> void:
 	var info := FileAccess.open(base + ".json", FileAccess.WRITE)
 	info.store_string(JSON.stringify(system_info(), "  "))
 	_file = FileAccess.open(base + ".csv", FileAccess.WRITE)
-	_file.store_line("frame,time_s,frame_ms,mouse_counts_x,mouse_counts_y,mouse_events,note")
+	_file.store_line("frame,time_s,frame_ms,mouse_counts_x,mouse_counts_y,mouse_events,process_ms,physics_ms,render_cpu_ms,gpu_ms,note")
 	_start_usec = Time.get_ticks_usec()
 	last_log_path = ProjectSettings.globalize_path(base + ".csv")
 	recording = true

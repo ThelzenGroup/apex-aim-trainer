@@ -3,9 +3,13 @@ extends RefCounted
 ## Analytic hitboxes for one dummy instance.
 ##
 ## The glTF importer puts each HB_* node under a BoneAttachment3D with its shape data in
-## the "extras" metadata. This reads them once, hides the debug meshes, and then tests rays
-## with HitTest against the skeleton's current bone poses, so hit detection never waits
-## for the physics step and box corners stay sharp.
+## the "extras" metadata. This reads them once and then tests rays with HitTest against the
+## skeleton's current bone poses, so hit detection never waits for the physics step and box
+## corners stay sharp.
+##
+## The importer's attachments are removed afterwards: Godot would otherwise move all 17 of
+## them per bot every frame for nothing. The HB_* meshes are kept, hidden, as a debug view
+## that sync_debug_meshes() places from the same math.
 
 
 class Shape:
@@ -26,6 +30,7 @@ const BOUND_MARGIN := 0.4
 var skeleton: Skeleton3D
 var shapes: Array[Shape] = []
 var meshes: Array[MeshInstance3D] = []
+var debug_visible := false
 var bound_radius := 0.0
 var _pelvis: int
 # Pose snapshot used by intersect(); shape transforms are filled in lazily, only for
@@ -42,6 +47,11 @@ func _init(dummy_root: Node) -> void:
 			if node is MeshInstance3D and node.name.begins_with("HB_"):
 				shapes.append(_shape_from(node, attachment.bone_idx))
 				meshes.append(node)
+				attachment.remove_child(node)
+				dummy_root.add_child(node)
+				node.top_level = true
+		if attachment.get_child_count() == 0:
+			attachment.free()
 	set_debug_visible(false)
 
 	_pelvis = skeleton.find_bone("pelvis")
@@ -73,8 +83,18 @@ static func _shape_from(node: MeshInstance3D, bone: int) -> Shape:
 
 
 func set_debug_visible(visible: bool) -> void:
+	debug_visible = visible
 	for mesh in meshes:
 		mesh.visible = visible
+	if visible:
+		sync_debug_meshes()
+
+
+## Moves the debug meshes onto the current pose. The owner calls this each frame while
+## debug_visible is on.
+func sync_debug_meshes() -> void:
+	for i in shapes.size():
+		meshes[i].global_transform = shape_transform(shapes[i])
 
 
 ## World transform of a shape in the current pose.

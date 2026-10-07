@@ -17,6 +17,7 @@ For each size class in art/config/dummies.json this:
 """
 import json
 import math
+import re
 import struct
 import sys
 from pathlib import Path
@@ -73,6 +74,40 @@ def import_sources():
     for clip, (action, _) in clips.items():
         action.name = clip
     return arm, mesh, clips
+
+
+def merge_bones(arm, mesh, clips):
+    """Fold bones matching the config's merge_bones rules into a kept bone.
+
+    Their skin weights move to that bone, and the bones and their animation channels are
+    dropped. Fewer bones means less animation work per bot per frame.
+    """
+    rules = [(re.compile(rule["pattern"]), rule["into"]) for rule in CONFIG.get("merge_bones", [])]
+    target = {b.name: into for b in arm.data.bones for pattern, into in rules if pattern.match(b.name)}
+    groups = mesh.vertex_groups
+    for name, into in target.items():
+        source = groups.get(name)
+        if source is None:
+            continue
+        dest = groups.get(into) or groups.new(name=into)
+        for v in mesh.data.vertices:
+            for g in v.groups:
+                if g.group == source.index:
+                    dest.add([v.index], g.weight, "ADD")
+        groups.remove(source)
+    bpy.context.view_layer.objects.active = arm
+    bpy.ops.object.mode_set(mode="EDIT")
+    for name in target:
+        arm.data.edit_bones.remove(arm.data.edit_bones[name])
+    bpy.ops.object.mode_set(mode="OBJECT")
+    for action, _ in clips.values():
+        cb = channelbag(action)
+        for fc in [fc for fc in cb.fcurves if fc.data_path.startswith('pose.bones["')]:
+            bone = fc.data_path.split('"')[1]
+            # Scale is never animated in these clips; constant channels only cost evaluation time.
+            unscaled = fc.data_path.endswith(".scale") and all(abs(k.co.y - 1.0) < 1e-6 for k in fc.keyframe_points)
+            if bone in target or unscaled:
+                cb.fcurves.remove(fc)
 
 
 def scale_height(arm, mesh, clips, s):
@@ -276,6 +311,7 @@ def write_sidecar(glb, size_name, height_m):
 
 def build(size_name, size):
     arm, mesh, clips = import_sources()
+    merge_bones(arm, mesh, clips)
     scale_height(arm, mesh, clips, size["height"])
     for action, spec in clips.values():
         if "strafe_yaw" in spec:

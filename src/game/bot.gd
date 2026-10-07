@@ -102,6 +102,8 @@ func _knock() -> void:
 
 
 func _process(delta: float) -> void:
+	if hitboxes.debug_visible:
+		hitboxes.sync_debug_meshes()
 	if knocked:
 		return
 	_think(delta)

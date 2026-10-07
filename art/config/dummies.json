@@ -4,6 +4,10 @@
     "ual2": "art/sources/UAL2_Standard.glb"
   },
   "fps": 30,
+  "merge_bones": [
+    { "pattern": "^(thumb|index|middle|ring|pinky)_.*_l$", "into": "hand_l" },
+    { "pattern": "^(thumb|index|middle|ring|pinky)_.*_r$", "into": "hand_r" }
+  ],
 
   "animations": {
     "Idle":                { "source": "ual1", "action": "Idle_Loop" },

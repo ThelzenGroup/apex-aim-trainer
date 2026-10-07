@@ -10,7 +10,8 @@ tweaked without opening Blender.
 `assets/models/dummy_<size>.glb`, one per size class (`small`, `medium`, `large`):
 
 - **Mesh and skeleton:** Quaternius's Universal Animation Library mannequin (CC0).
-  It uses a 65-bone humanoid rig that Unity, Godot and Unreal can retarget.
+  The finger bones are folded into the hands, leaving a 25-bone rig. That keeps
+  animation cheap with many bots on screen; the hands stay open.
 - **18 in-place animation clips:**
   - Moving: `Idle`, `Jog`, `Sprint`, `Strafe_Left`, `Strafe_Right`
   - Crouching: `Crouch_Idle`, `Crouch_Fwd`, `Crouch_Strafe_Left`, `Crouch_Strafe_Right`
@@ -46,6 +47,8 @@ python3 art/scripts/check_dummies.py             # reads the .glb files like an 
 
 Everything adjustable lives in `config/dummies.json`:
 
+- `merge_bones`: bones folded into another bone (their skin weights move to it and their
+  animation channels are dropped). Constant scale channels are dropped as well.
 - `sizes`: `height` scales the whole dummy. `girth` and `head_girth` thicken or slim
   the body around its bones, so the animations still fit.
 - `animations`: which source clips to keep and what to call them. `strafe_yaw` turns

@@ -59,19 +59,27 @@ func test_clips_import_with_godot_names() -> void:
 
 
 func test_analytic_hitboxes_follow_the_animation() -> void:
+	# `root` gets DummyHitboxes (which removes the importer's bone attachments); `twin` keeps
+	# them, so Godot's own attachment transforms are the reference.
 	var root := _dummy("medium")
-	tree.root.add_child(root)
-	root.position = Vector3(3, 0, -7)
-	root.rotation.y = 0.6
+	var twin := _dummy("medium")
+	for node: Node3D in [root, twin]:
+		tree.root.add_child(node)
+		node.position = Vector3(3, 0, -7)
+		node.rotation.y = 0.6
+		var player: AnimationPlayer = node.find_children("*", "AnimationPlayer", true, false)[0]
+		player.play("Crouch_Strafe_Left")
+		player.seek(0.37, true)
 	var hitboxes := DummyHitboxes.new(root)
 	check_eq(hitboxes.shapes.size(), 17, "hitbox count")
-	var player: AnimationPlayer = root.find_children("*", "AnimationPlayer", true, false)[0]
-	player.play("Crouch_Strafe_Left")
-	player.seek(0.37, true)
+	check(root.find_children("*", "BoneAttachment3D", true, false).is_empty(), "the importer's attachments are removed")
+	var reference := {}
+	for mesh in twin.find_children("HB_*", "MeshInstance3D", true, false):
+		reference[mesh.name] = mesh
 	await tree.process_frame
 	await tree.process_frame
 	for i in hitboxes.shapes.size():
-		var expected := hitboxes.meshes[i].global_transform
+		var expected: Transform3D = reference[hitboxes.shapes[i].name].global_transform
 		var actual := hitboxes.shape_transform(hitboxes.shapes[i])
 		check_vec_near(actual.origin, expected.origin, 1e-4, hitboxes.shapes[i].name + " position")
 		check(actual.basis.get_rotation_quaternion().angle_to(expected.basis.get_rotation_quaternion()) < 1e-3,
@@ -86,4 +94,9 @@ func test_analytic_hitboxes_follow_the_animation() -> void:
 	check(not hit.is_empty() and hit["shape"] == head, "head shot registers as head, got %s" % [hit])
 	check(hitboxes.intersect(from + Vector3(0, 3, 0), (head_center - from).normalized(), 20.0).is_empty(),
 		"a ray 3 m over the head misses")
+
+	# The debug view follows the same math.
+	hitboxes.set_debug_visible(true)
+	check_vec_near(hitboxes.meshes[0].global_position, hitboxes.shape_transform(hitboxes.shapes[0]).origin, 1e-4, "debug mesh placed")
 	root.queue_free()
+	twin.queue_free()
