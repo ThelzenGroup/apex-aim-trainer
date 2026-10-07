@@ -1,0 +1,3 @@
+# Blender as a Python module (wheels need Python 3.13) and Pillow for preview sheets.
+bpy==5.2.2
+pillow

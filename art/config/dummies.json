@@ -1,0 +1,49 @@
+{
+  "sources": {
+    "ual1": "art/sources/UAL1_Standard.glb",
+    "ual2": "art/sources/UAL2_Standard.glb"
+  },
+  "fps": 30,
+
+  "animations": {
+    "Idle":                { "source": "ual1", "action": "Idle_Loop" },
+    "Jog":                 { "source": "ual1", "action": "Jog_Fwd_Loop" },
+    "Sprint":              { "source": "ual1", "action": "Sprint_Loop" },
+    "Strafe_Left":         { "source": "ual1", "action": "Jog_Fwd_Loop", "strafe_yaw": 65 },
+    "Strafe_Right":        { "source": "ual1", "action": "Jog_Fwd_Loop", "strafe_yaw": -65 },
+    "Crouch_Idle":         { "source": "ual1", "action": "Crouch_Idle_Loop" },
+    "Crouch_Fwd":          { "source": "ual1", "action": "Crouch_Fwd_Loop" },
+    "Crouch_Strafe_Left":  { "source": "ual1", "action": "Crouch_Fwd_Loop", "strafe_yaw": 65 },
+    "Crouch_Strafe_Right": { "source": "ual1", "action": "Crouch_Fwd_Loop", "strafe_yaw": -65 },
+    "Jump_Start":          { "source": "ual1", "action": "Jump_Start" },
+    "Jump_Loop":           { "source": "ual1", "action": "Jump_Loop" },
+    "Jump_Land":           { "source": "ual1", "action": "Jump_Land" },
+    "Slide_Start":         { "source": "ual2", "action": "Slide_Start" },
+    "Slide_Loop":          { "source": "ual2", "action": "Slide_Loop" },
+    "Slide_Exit":          { "source": "ual2", "action": "Slide_Exit" },
+    "Hit_Chest":           { "source": "ual1", "action": "Hit_Chest" },
+    "Hit_Head":            { "source": "ual1", "action": "Hit_Head" }
+  },
+  "default_animation": "Idle",
+
+  "sizes": {
+    "small":  { "height": 0.96, "girth": 0.88, "head_girth": 0.95 },
+    "medium": { "height": 1.00, "girth": 1.00, "head_girth": 1.00 },
+    "large":  { "height": 1.06, "girth": 1.22, "head_girth": 1.08 }
+  },
+
+  "hitbox_radius_percentile": 95,
+  "hitboxes": [
+    { "name": "head",       "region": "head", "shape": "capsule", "bones": ["Head"] },
+    { "name": "neck",       "region": "body", "shape": "capsule", "bones": ["neck_01"] },
+    { "name": "chest",      "region": "body", "shape": "box",     "bones": ["spine_03", "clavicle_l", "clavicle_r"] },
+    { "name": "stomach",    "region": "body", "shape": "box",     "bones": ["spine_02", "spine_01"] },
+    { "name": "pelvis",     "region": "body", "shape": "box",     "bones": ["pelvis"] },
+    { "name": "upperarm_l", "region": "limb", "shape": "capsule", "bones": ["upperarm_l"], "mirror": true },
+    { "name": "lowerarm_l", "region": "limb", "shape": "capsule", "bones": ["lowerarm_l"], "mirror": true },
+    { "name": "hand_l",     "region": "limb", "shape": "capsule", "bones": ["hand_l"],     "mirror": true },
+    { "name": "thigh_l",    "region": "limb", "shape": "capsule", "bones": ["thigh_l"],    "mirror": true },
+    { "name": "calf_l",     "region": "limb", "shape": "capsule", "bones": ["calf_l"],     "mirror": true },
+    { "name": "foot_l",     "region": "limb", "shape": "box",     "bones": ["foot_l"],     "mirror": true }
+  ]
+}

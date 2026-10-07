@@ -1,0 +1,5 @@
+# Downloaded CC0 source packs (re-fetch with art/scripts/fetch_sources.py)
+art/sources/
+
+__pycache__/
+*.blend1

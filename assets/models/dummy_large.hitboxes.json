@@ -1,0 +1,365 @@
+{
+  "model": "dummy_large.glb",
+  "size_class": "large",
+  "height_m": 1.939,
+  "notes": "Offsets are glTF node transforms relative to the bone's joint node. Capsules run along local +Y; height includes both caps.",
+  "animations": [
+    "Crouch_Fwd",
+    "Crouch_Idle",
+    "Crouch_Strafe_Left",
+    "Crouch_Strafe_Right",
+    "Hit_Chest",
+    "Hit_Head",
+    "Idle",
+    "Jog",
+    "Jump_Land",
+    "Jump_Loop",
+    "Jump_Start",
+    "Slide_Exit",
+    "Slide_Loop",
+    "Slide_Start",
+    "Sprint",
+    "Strafe_Left",
+    "Strafe_Right"
+  ],
+  "hitboxes": [
+    {
+      "name": "HB_limb_hand_l",
+      "region": "limb",
+      "bone": "hand_l",
+      "shape": "capsule",
+      "translation": [
+        0.034253787249326706,
+        0.12588126957416534,
+        0.015527801588177681
+      ],
+      "rotation": [
+        4.4936328436051554e-08,
+        -1.303854357814771e-08,
+        6.05359717908982e-09,
+        1
+      ],
+      "radius": 0.0779,
+      "height": 0.2429
+    },
+    {
+      "name": "HB_limb_lowerarm_l",
+      "region": "limb",
+      "bone": "lowerarm_l",
+      "shape": "capsule",
+      "translation": [
+        0.010083687491714954,
+        0.1419319063425064,
+        -0.0031153361778706312
+      ],
+      "rotation": [
+        2.374869900734211e-08,
+        -8.381902283360887e-09,
+        7.450580596923828e-09,
+        1
+      ],
+      "radius": 0.0796,
+      "height": 0.2826
+    },
+    {
+      "name": "HB_limb_upperarm_l",
+      "region": "limb",
+      "bone": "upperarm_l",
+      "shape": "capsule",
+      "translation": [
+        -0.00767406215891242,
+        0.10667023062705994,
+        0.0028475176077336073
+      ],
+      "rotation": [
+        3.1199345329469e-08,
+        3.725359132289441e-09,
+        5.5879163518568475e-09,
+        1
+      ],
+      "radius": 0.1001,
+      "height": 0.3808
+    },
+    {
+      "name": "HB_limb_hand_r",
+      "region": "limb",
+      "bone": "hand_r",
+      "shape": "capsule",
+      "translation": [
+        -0.03425377979874611,
+        0.12588123977184296,
+        0.015527669340372086
+      ],
+      "rotation": [
+        2.3981566954489608e-08,
+        -1.5133583275428464e-09,
+        -1.3969849721462424e-09,
+        1
+      ],
+      "radius": 0.0779,
+      "height": 0.2429
+    },
+    {
+      "name": "HB_limb_lowerarm_r",
+      "region": "limb",
+      "bone": "lowerarm_r",
+      "shape": "capsule",
+      "translation": [
+        -0.010083668865263462,
+        0.14193207025527954,
+        -0.003115345723927021
+      ],
+      "rotation": [
+        2.6542693376541138e-08,
+        9.31323906883108e-10,
+        2.0954755708402217e-09,
+        1
+      ],
+      "radius": 0.0796,
+      "height": 0.2826
+    },
+    {
+      "name": "HB_limb_upperarm_r",
+      "region": "limb",
+      "bone": "upperarm_r",
+      "shape": "capsule",
+      "translation": [
+        0.007673679850995541,
+        0.1066703051328659,
+        0.002847498282790184
+      ],
+      "rotation": [
+        3.8649957900815934e-08,
+        7.449855399244143e-09,
+        -7.450549510679139e-09,
+        1
+      ],
+      "radius": 0.1001,
+      "height": 0.3808
+    },
+    {
+      "name": "HB_head_head",
+      "region": "head",
+      "bone": "Head",
+      "shape": "capsule",
+      "translation": [
+        2.2118908926671565e-09,
+        0.12969627976417542,
+        -0.0069717601872980595
+      ],
+      "rotation": [
+        3.3527612686157227e-08,
+        5.412337245047638e-15,
+        1.1641529962247432e-09,
+        1
+      ],
+      "radius": 0.1291,
+      "height": 0.2925
+    },
+    {
+      "name": "HB_body_neck",
+      "region": "body",
+      "bone": "neck_01",
+      "shape": "capsule",
+      "translation": [
+        9.429643732516979e-09,
+        0.04997667670249939,
+        -0.05106399953365326
+      ],
+      "rotation": [
+        3.725290298461914e-08,
+        -4.1472993927982316e-09,
+        4.860340574452948e-09,
+        1
+      ],
+      "radius": 0.1258,
+      "height": 0.2517
+    },
+    {
+      "name": "HB_body_chest",
+      "region": "body",
+      "bone": "spine_03",
+      "shape": "box",
+      "translation": [
+        1.5599653124809265e-08,
+        0.10190998017787933,
+        -0.021477431058883667
+      ],
+      "rotation": [
+        3.166496753692627e-08,
+        2.6047870527179384e-09,
+        -8.440112497787311e-10,
+        1
+      ],
+      "size": [
+        0.4172,
+        0.2726,
+        0.3591
+      ]
+    },
+    {
+      "name": "HB_body_stomach",
+      "region": "body",
+      "bone": "spine_02",
+      "shape": "box",
+      "translation": [
+        9.895306796181558e-10,
+        0.00290792528539896,
+        0.009700000286102295
+      ],
+      "rotation": [
+        4.0978193283081055e-08,
+        -3.1523117449694382e-09,
+        5.8207622749550936e-11,
+        1
+      ],
+      "size": [
+        0.4047,
+        0.2769,
+        0.3067
+      ]
+    },
+    {
+      "name": "HB_limb_foot_l",
+      "region": "limb",
+      "bone": "foot_l",
+      "shape": "box",
+      "translation": [
+        0.012871650978922844,
+        0.1166004091501236,
+        0.033042196184396744
+      ],
+      "rotation": [
+        2.9802524892375004e-08,
+        1.2005330063402653e-09,
+        -6.710583200231213e-10,
+        1
+      ],
+      "size": [
+        0.1458,
+        0.3134,
+        0.2068
+      ]
+    },
+    {
+      "name": "HB_limb_calf_l",
+      "region": "limb",
+      "bone": "calf_l",
+      "shape": "capsule",
+      "translation": [
+        0.0057979910634458065,
+        0.2316778600215912,
+        0.022026309743523598
+      ],
+      "rotation": [
+        3.911522128419165e-08,
+        -3.775255386084808e-10,
+        -1.5570401634690256e-09,
+        1
+      ],
+      "radius": 0.0962,
+      "height": 0.4681
+    },
+    {
+      "name": "HB_limb_thigh_l",
+      "region": "limb",
+      "bone": "thigh_l",
+      "shape": "capsule",
+      "translation": [
+        0.0046728202141821384,
+        0.17626717686653137,
+        -0.008114101365208626
+      ],
+      "rotation": [
+        3.166496753692627e-08,
+        -1.8626460374093767e-09,
+        -7.450580596923828e-09,
+        1
+      ],
+      "radius": 0.1202,
+      "height": 0.5116
+    },
+    {
+      "name": "HB_limb_foot_r",
+      "region": "limb",
+      "bone": "foot_r",
+      "shape": "box",
+      "translation": [
+        -0.012814204208552837,
+        0.1166004166007042,
+        0.03302468731999397
+      ],
+      "rotation": [
+        5.9601411805942917e-08,
+        -5.675246939063072e-09,
+        2.1545698558611548e-09,
+        1
+      ],
+      "size": [
+        0.1459,
+        0.3134,
+        0.2069
+      ]
+    },
+    {
+      "name": "HB_limb_calf_r",
+      "region": "limb",
+      "bone": "calf_r",
+      "shape": "capsule",
+      "translation": [
+        -0.005775799509137869,
+        0.2316778004169464,
+        0.022033890709280968
+      ],
+      "rotation": [
+        4.097764616517452e-08,
+        1.857301867858041e-09,
+        -6.517838713193669e-09,
+        1
+      ],
+      "radius": 0.0962,
+      "height": 0.4681
+    },
+    {
+      "name": "HB_limb_thigh_r",
+      "region": "limb",
+      "bone": "thigh_r",
+      "shape": "capsule",
+      "translation": [
+        -0.00467285979539156,
+        0.17626717686653137,
+        -0.008114084601402283
+      ],
+      "rotation": [
+        3.725290298461914e-08,
+        -5.1222723840282924e-09,
+        3.725290298461914e-09,
+        1
+      ],
+      "radius": 0.1202,
+      "height": 0.5116
+    },
+    {
+      "name": "HB_body_pelvis",
+      "region": "body",
+      "bone": "pelvis",
+      "shape": "box",
+      "translation": [
+        -3.377201185372769e-09,
+        0.053812623023986816,
+        0.03816298767924309
+      ],
+      "rotation": [
+        3.725290298461914e-08,
+        1.4757377542196082e-09,
+        8.136654683355005e-10,
+        1
+      ],
+      "size": [
+        0.346,
+        0.236,
+        0.2934
+      ]
+    }
+  ]
+}
