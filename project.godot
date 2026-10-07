@@ -1,0 +1,34 @@
+; Engine configuration file.
+; Godot rewrites this file when the editor saves project settings.
+
+config_version=5
+
+[application]
+
+config/name="Apex Aim Lab"
+config/description="First-week validation build for the Apex aim trainer: input, latency, bot load and controllers."
+run/main_scene="res://scenes/main_menu.tscn"
+config/features=PackedStringArray("4.7", "Forward Plus")
+config/version="0.1.0"
+
+[autoload]
+
+Settings="*res://src/autoload/settings.gd"
+Telemetry="*res://src/autoload/telemetry.gd"
+
+[display]
+
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/vsync/vsync_mode=0
+
+[physics]
+
+common/physics_ticks_per_second=120
+common/max_physics_steps_per_frame=8
+
+[rendering]
+
+renderer/rendering_method="forward_plus"
+rendering_device/driver.windows="d3d12"
+rendering_device/vsync/swapchain_image_count=2

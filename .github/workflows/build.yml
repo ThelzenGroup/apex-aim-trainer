@@ -1,0 +1,39 @@
+name: Test and build
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot and export templates
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/godot-4.7.2
+          key: godot-4.7.2-windows-templates-${{ hashFiles('tools/setup_godot.sh') }}
+
+      - name: Install Godot 4.7.2
+        run: |
+          tools/setup_godot.sh
+          echo "$HOME/.local/share/godot-4.7.2" >> "$GITHUB_PATH"
+
+      - name: Run tests
+        run: tools/run_tests.sh
+
+      - name: Export Windows build
+        run: |
+          mkdir -p build/windows
+          godot --headless --path . --export-release "Windows" build/windows/ApexAimLab.exe
+          test -s build/windows/ApexAimLab.exe
+
+      - name: Upload Windows build
+        uses: actions/upload-artifact@v4
+        with:
+          name: ApexAimLab-windows
+          path: build/windows/ApexAimLab.exe
+          retention-days: 30

@@ -3,3 +3,8 @@ art/sources/
 
 __pycache__/
 *.blend1
+
+# Godot
+.godot/
+build/
+override.cfg
