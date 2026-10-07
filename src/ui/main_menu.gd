@@ -2,6 +2,7 @@ extends Control
 ## Start screen. The system summary at the top is test 2 (launch check): it should name
 ## your GPU, the renderer you picked and your monitor's real refresh rate.
 
+const SCENARIOS := ["res://data/scenarios/close_range_tracking.tres"]
 const LABS := [
 	["Mouse lab: sensitivity and polling rate (tests 3 and 4)", "res://scenes/lab/mouse_lab.tscn"],
 	["Latency flash: click-to-photon (test 5)", "res://scenes/lab/latency_lab.tscn"],
@@ -16,7 +17,7 @@ var _logs_folder := Telemetry.logs_folder()
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	var margin := MarginContainer.new()
-	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
+	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for side in ["left", "top", "right", "bottom"]:
 		margin.add_theme_constant_override("margin_" + side, 32)
 	add_child(margin)
@@ -24,17 +25,36 @@ func _ready() -> void:
 	columns.add_theme_constant_override("separation", 40)
 	margin.add_child(columns)
 
+	# The left column scrolls so nothing is cut off on short screens; the UI scales from a
+	# fixed base size, so this applies at every resolution.
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	columns.add_child(scroll)
 	var left := VBoxContainer.new()
 	left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	left.add_theme_constant_override("separation", 10)
-	columns.add_child(left)
+	scroll.add_child(left)
 	var title := Label.new()
-	title.text = "Apex Aim Lab · first-week engine tests"
+	title.text = "Apex Aim Lab"
 	title.add_theme_font_size_override("font_size", 28)
 	left.add_child(title)
 	_info = Label.new()
 	_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_info.add_theme_font_size_override("font_size", 13)
 	left.add_child(_info)
+	_heading(left, "Train")
+	for path: String in SCENARIOS:
+		var config: ScenarioConfig = load(path)
+		var button := Button.new()
+		button.text = "%s: %s" % [config.title, config.description]
+		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		button.pressed.connect(func() -> void:
+			Scenario.selected = config
+			get_tree().change_scene_to_file("res://scenes/scenario.tscn"))
+		left.add_child(button)
+	_heading(left, "Engine tests")
 	for lab: Array in LABS:
 		var button := Button.new()
 		button.text = lab[0]
@@ -56,6 +76,13 @@ func _ready() -> void:
 	var settings := SettingsPanel.new()
 	settings.custom_minimum_size = Vector2(460, 0)
 	columns.add_child(settings)
+
+
+func _heading(parent: Control, text: String) -> void:
+	var label := Label.new()
+	label.text = text
+	label.add_theme_font_size_override("font_size", 20)
+	parent.add_child(label)
 
 
 func _process(_delta: float) -> void:

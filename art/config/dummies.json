@@ -22,7 +22,8 @@
     "Slide_Loop":          { "source": "ual2", "action": "Slide_Loop" },
     "Slide_Exit":          { "source": "ual2", "action": "Slide_Exit" },
     "Hit_Chest":           { "source": "ual1", "action": "Hit_Chest" },
-    "Hit_Head":            { "source": "ual1", "action": "Hit_Head" }
+    "Hit_Head":            { "source": "ual1", "action": "Hit_Head" },
+    "Knocked":             { "source": "ual1", "action": "Death01" }
   },
   "default_animation": "Idle",
 

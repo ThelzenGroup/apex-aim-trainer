@@ -1,10 +1,12 @@
 class_name Bot
 extends Node3D
-## An ADAD-strafing target dummy that faces the player.
+## An ADAD-strafing target dummy that faces the player, with Apex health and shields.
 ##
 ## The movement is a stand-in for Apex movement: it flips strafe direction at random
 ## intervals, accelerates like a player, and sometimes crouch-spams or jumps. Speeds are
 ## placeholders until they are measured from Apex footage.
+
+signal knocked_down
 
 const LOOPING_CLIPS := ["Idle", "Jog", "Sprint", "Strafe_Left", "Strafe_Right", "Crouch_Idle",
 	"Crouch_Fwd", "Crouch_Strafe_Left", "Crouch_Strafe_Right", "Jump", "Slide"]
@@ -20,6 +22,11 @@ const BLEND := 0.12
 var velocity := Vector3.ZERO
 var hitboxes: DummyHitboxes
 var hits := {"head": 0, "body": 0, "limb": 0}
+var shield_tier := "none"
+var max_shield := 0.0
+var shield := 0.0
+var health := ApexDamage.HEALTH
+var knocked := false
 
 var _model: Node3D
 var _animations: AnimationPlayer
@@ -59,7 +66,44 @@ func register_hit(region: String) -> void:
 	hits[region] += 1
 
 
+func set_shield_tier(tier: String) -> void:
+	shield_tier = tier
+	max_shield = ApexDamage.SHIELDS[tier]
+	shield = max_shield
+	health = ApexDamage.HEALTH
+
+
+## Applies a hit. Returns the shield and health damage dealt and whether the shield broke
+## or the bot went down.
+func take_damage(amount: float) -> Dictionary:
+	if knocked:
+		return {"shield_damage": 0.0, "health_damage": 0.0, "shield_broken": false, "knocked": false}
+	var after := ApexDamage.apply(shield, health, amount)
+	var result := {
+		"shield_damage": shield - after.x,
+		"health_damage": health - after.y,
+		"shield_broken": shield > 0.0 and after.x <= 0.0,
+		"knocked": after.y <= 0.0,
+	}
+	shield = after.x
+	health = after.y
+	if result["knocked"]:
+		_knock()
+	return result
+
+
+func _knock() -> void:
+	knocked = true
+	velocity = Vector3.ZERO
+	position.y = _home.y
+	remove_from_group(LookController.TARGET_GROUP)
+	_animations.play("Knocked", BLEND)
+	knocked_down.emit()
+
+
 func _process(delta: float) -> void:
+	if knocked:
+		return
 	_think(delta)
 	var right := -global_basis.x  # the model faces +Z, so its right is -X
 	var speed := crouch_speed if _crouch_left > 0.0 else strafe_speed

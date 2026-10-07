@@ -11,12 +11,13 @@ tweaked without opening Blender.
 
 - **Mesh and skeleton:** Quaternius's Universal Animation Library mannequin (CC0).
   It uses a 65-bone humanoid rig that Unity, Godot and Unreal can retarget.
-- **17 in-place animation clips:**
+- **18 in-place animation clips:**
   - Moving: `Idle`, `Jog`, `Sprint`, `Strafe_Left`, `Strafe_Right`
   - Crouching: `Crouch_Idle`, `Crouch_Fwd`, `Crouch_Strafe_Left`, `Crouch_Strafe_Right`
   - Jumping: `Jump_Start`, `Jump_Loop`, `Jump_Land`
   - Sliding: `Slide_Start`, `Slide_Loop`, `Slide_Exit`
   - Hit reactions: `Hit_Chest`, `Hit_Head`
+  - `Knocked`: a fall to the ground, played when a target goes down
 
   Movement code should drive the dummy's position; the clips only animate the body.
 - **Hitboxes:** 17 per dummy, each parented to a bone so it follows every animation.

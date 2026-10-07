@@ -109,8 +109,23 @@ In the **Controllers** lab, check that:
 - **Q** and **E** make the controller rumble;
 - on the DualSense, **G** turns the motion sensors on and the gyro numbers change when you tilt the pad. **C** starts and stops calibration.
 
+## Also try: close-range tracking
+
+The menu's **Train** section has the first real scenario.
+
+- Ten targets appear one at a time, 8–15 m away, near where you're looking. They strafe and crouch-spam.
+- Each has purple shields (100) and 100 health. Knock each one as fast as you can.
+- **R** (or **X** on a controller) reloads.
+- The results screen shows average and fastest time to knock, accuracy, headshot rate and damage per magazine. Every session is saved, so it also compares you with your previous runs.
+
+The rifle's numbers, the bullet speed and the bots' movement are placeholders, so judge the *feel*, not the scores:
+- Does aiming at Apex sensitivity feel right?
+- Do bullet travel and hit feedback read clearly?
+- Is anything distracting?
+
 ## What to send back
 
 - the zipped logs folder
 - your 360° distances, and the latency frame counts for the build and Apex
 - anything odd: freezes, stutter, crashes, wrong refresh rate, a controller that isn't detected
+- how close-range tracking felt, and your results screen

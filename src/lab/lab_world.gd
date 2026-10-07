@@ -65,7 +65,7 @@ static func add_crosshair(parent: Node) -> ColorRect:
 	var layer := CanvasLayer.new()
 	parent.add_child(layer)
 	var center := CenterContainer.new()
-	center.set_anchors_preset(Control.PRESET_FULL_RECT)
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	layer.add_child(center)
 	var dot := ColorRect.new()

@@ -8,6 +8,7 @@ const SCENES := [
 	"res://scenes/lab/latency_lab.tscn",
 	"res://scenes/lab/load_lab.tscn",
 	"res://scenes/lab/controller_lab.tscn",
+	"res://scenes/scenario.tscn",
 ]
 
 

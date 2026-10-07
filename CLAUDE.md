@@ -30,7 +30,10 @@ godot --headless --path . --export-release "Windows" build/windows/ApexAimLab.ex
 - **Mouse look** reads `InputEventMouseMotion.screen_relative`, which carries raw counts while the mouse is captured.
   - Never use `relative`; the window's stretch factor scales it.
   - Turn the camera in `_input` or `_process`, never on the physics tick, and never put physics interpolation on the camera.
-- **Engine-free math** (sensitivity, ballistics, recoil, stick curves, aim assist, hit tests) lives in `src/core` as static functions, with tests in `tests/`.
+- **Engine-free math and rules** live in `src/core`, with tests in `tests/`: sensitivity, health and shields, weapon timing, scoring, ballistics, recoil, stick curves, aim assist and hit tests.
+- **Scenarios** are data: a `ScenarioConfig` plus a `WeaponStats` resource in `data/`, run by `src/scenario/scenario.gd`.
+  - Add new scenarios to `SCENARIOS` in `main_menu.gd`. Exported builds can't list `res://` folders reliably, because of `.remap` files.
+  - `Scenario.force_trigger` and `ScenarioHistory.folder` exist for automated tests.
 - **Hits** are analytic: `DummyHitboxes` plus `HitTest`, using the `HB_*` nodes and glTF extras from the bot models. Physics bodies are not used for hits.
 - **Placeholder numbers** are marked as such in the code: bullet speed, recoil, bot speeds and aim-assist strength. Don't present them as Apex data.
 - **Startup-only settings** (renderer, swapchain, frame queue) are written to `override.cfg` by `Settings.apply_startup_and_restart()`.

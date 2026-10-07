@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WeaponStats" format=3]
+
+[ext_resource type="Script" path="res://src/game/weapon_stats.gd" id="1_stats"]
+
+[resource]
+script = ExtResource("1_stats")
+display_name = "Placeholder rifle"
+placeholder = true
+damage = 14.0
+fire_rate = 13.5
+magazine_size = 28
+reload_time = 2.4
+headshot_multiplier = 1.75
+limb_multiplier = 0.8
+bullet_speed = 600.0
+bullet_gravity = 9.81
+recoil = PackedVector2Array(0, 0.45, 0.1, 0.4, -0.12, 0.35, 0.15, 0.3, -0.1, 0.25)

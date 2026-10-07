@@ -24,7 +24,7 @@ var _recoil := RecoilPattern.new(PackedVector2Array(RECOIL))
 var _rng := RandomNumberGenerator.new()
 var _emitter_index := EMITTER_RATES.size() - 1
 var _emit_carry := 0.0
-var _cooldown := 0.0
+var _weapon := WeaponState.new(FIRE_RATE, 1_000_000, 0.0)
 var _shot := 0
 var _since_shot := 0.0
 var _crosshair: ColorRect
@@ -141,17 +141,13 @@ func _process(delta: float) -> void:
 
 func _fire(delta: float) -> void:
 	_since_shot += delta
-	_cooldown = maxf(_cooldown - delta, -1.0 / FIRE_RATE)
 	var pads := Input.get_connected_joypads()
 	var trigger := not pads.is_empty() and Input.get_joy_axis(pads[0], JOY_AXIS_TRIGGER_RIGHT) > 0.5
 	var mouse := Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
-	if not (mouse or trigger):
-		_cooldown = maxf(_cooldown, 0.0)
-		if _since_shot > 0.3:
-			_shot = 0
-		return
-	while _cooldown <= 0.0:
-		_cooldown += 1.0 / FIRE_RATE
+	var shots := _weapon.trigger(mouse or trigger, delta)
+	if shots == 0 and _since_shot > 0.3:
+		_shot = 0
+	for i in shots:
 		projectiles.fire(look.camera.global_position, -look.camera.global_basis.z * BULLET_SPEED, true)
 		look.kick(_recoil.kick(_shot))
 		_shot += 1

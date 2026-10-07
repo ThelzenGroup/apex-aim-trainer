@@ -31,7 +31,7 @@ func _ready() -> void:
 	add_child(layer)
 	_flash = ColorRect.new()
 	_flash.color = Color.WHITE
-	_flash.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_flash.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_flash.visible = false
 	layer.add_child(_flash)

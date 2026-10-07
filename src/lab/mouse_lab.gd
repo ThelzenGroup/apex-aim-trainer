@@ -58,7 +58,7 @@ func _build_menu() -> Control:
 	var layer := CanvasLayer.new()
 	add_child(layer)
 	var center := CenterContainer.new()
-	center.set_anchors_preset(Control.PRESET_FULL_RECT)
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	layer.add_child(center)
 	var panel := PanelContainer.new()
 	center.add_child(panel)
