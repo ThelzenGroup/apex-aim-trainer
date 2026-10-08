@@ -1,7 +1,7 @@
 class_name Scenario
 extends Lab
 ## A training session. Targets appear one at a time near where you are looking and strafe;
-## knock each one as fast as you can. Scored on time to knock, accuracy, headshots and
+## knock each one as fast as you can, moving as you would in Apex. Scored on time to knock, accuracy, headshots and
 ## damage per magazine, and every session is saved so you can compare runs.
 
 const DEFAULT_CONFIG := "res://data/scenarios/close_range_r99.tres"
@@ -20,6 +20,7 @@ var config: ScenarioConfig
 var state := State.COUNTDOWN
 var stats: SessionStats
 var look: LookController
+var motor: PlayerMotor
 var projectiles: Projectiles
 var target: Bot
 ## Holds the trigger without a mouse or controller, for automated tests.
@@ -57,8 +58,8 @@ func _ready() -> void:
 	super()
 	LabWorld.build_range(self)
 	look = LookController.new()
-	look.position = Vector3(0, 1.6, 0)
 	add_child(look)
+	motor = PlayerMotor.new(look)
 	projectiles = Projectiles.new()
 	projectiles.gravity = Vector3(0, -config.weapon.bullet_gravity, 0)
 	add_child(projectiles)
@@ -86,6 +87,7 @@ func restart() -> void:
 	_next_spawn_in = 0.0
 	state = State.COUNTDOWN
 	_results.visible = false
+	motor.reset(Vector3.ZERO)
 	look.face(0.0)
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
@@ -111,6 +113,9 @@ func _on_key(keycode: Key) -> void:
 
 
 func _process(delta: float) -> void:
+	# Move first, so this frame's shots leave from where the player is now.
+	motor.enabled = state != State.RESULTS
+	motor.update(delta)
 	match state:
 		State.COUNTDOWN:
 			_countdown -= delta
@@ -150,13 +155,14 @@ func _update_weapon(delta: float) -> void:
 func _spawn_target() -> void:
 	var yaw := deg_to_rad(look.yaw + _rng.randf_range(-config.spread_degrees, config.spread_degrees))
 	var distance := _rng.randf_range(config.distance_min, config.distance_max)
+	var player := motor.floor_position()
 	var bot := Bot.new()
 	bot.strafe_speed = config.strafe_speed
 	bot.crouch_speed = config.crouch_speed
 	bot.strafe_width = config.strafe_width
-	bot.position = Vector3(-sin(yaw), 0.0, -cos(yaw)) * distance
+	bot.position = player + Vector3(-sin(yaw), 0.0, -cos(yaw)) * distance
 	add_child(bot)
-	bot.setup(_models[config.sizes[_rng.randi() % config.sizes.size()]], Vector3.ZERO, _rng.randi())
+	bot.setup(_models[config.sizes[_rng.randi() % config.sizes.size()]], player, _rng.randi())
 	bot.set_shield_tier(config.shield_tier)
 	target = bot
 	projectiles.bots.clear()
@@ -269,6 +275,7 @@ func _update_hud() -> void:
 		"Target %d / %d · %.1f s" % [mini(stats.knock_times.size() + 1, config.target_count), config.target_count, _clock],
 		"Accuracy %.0f%% · headshots %.0f%%" % [stats.accuracy() * 100.0, stats.headshot_rate() * 100.0],
 		"Last knock %.2f s" % stats.knock_times[-1] if not stats.knock_times.is_empty() else "Last knock –",
+		"[WASD] move   [Ctrl/C] crouch   [Space] jump",
 		"[LMB/R2] fire   [R/X] reload   [Esc] menu",
 	])
 	_ammo_label.text = "Reloading…" if _weapon.is_reloading() else "%d / %d" % [_weapon.ammo, _weapon.magazine_size]

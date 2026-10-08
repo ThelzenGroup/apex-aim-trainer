@@ -11,6 +11,8 @@ The project currently holds **Apex Aim Lab**, a Godot 4.7.2 build with two parts
 
 The menu's **Train** section holds the scenarios. In each one, ten targets with purple shields (100 shield plus 100 health) appear one at a time near where you are looking. They strafe at Apex's walking speed and sometimes crouch-spam or jump. Knock each one as fast as you can. **R** (or **X** on a controller) reloads.
 
+You move as you would in an Apex fight: **WASD** walks and strafes, **Ctrl** or **C** crouches, and **Space** jumps. On a controller, use the left stick, **B**/**Circle** and **A**/**Cross**. Sprinting and sliding are left out, since Apex doesn't fire while sprinting.
+
 | Scenario | Weapon | Range |
 |---|---|---|
 | Close-range tracking | R-99 | 8–15 m |
@@ -26,7 +28,7 @@ Weapons carry level 3 magazines. The results screen shows average and fastest ti
 - tactical and empty reload times
 - bullet speed (except the Volt's)
 - shields and health
-- walking and crouch-walking speed
+- walking and crouch-walking speed, for both you and the bots
 - sensitivity and FOV
 
 The weapon numbers are from Season 30, and each file in `data/weapons/` names its source.
@@ -34,7 +36,8 @@ The weapon numbers are from Season 30, and each file in `data/weapons/` names it
 **What is still a placeholder:**
 - recoil patterns and bullet drop
 - the Volt's bullet speed
-- how the bots time their direction changes and how fast they accelerate
+- acceleration, jump height and crouched eye height, for both you and the bots
+- how the bots time their direction changes
 - aim-assist strength
 
 On screens wider than 21:9, **Limit view to 21:9** in the settings adds black bars at the sides. Use it if your Apex shows 21:9 on your monitor.

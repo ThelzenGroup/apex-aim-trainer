@@ -34,6 +34,43 @@ func test_pillarbox_to_21_9() -> void:
 	check_eq(ApexSensitivity.pillarbox_width(Vector2(1920, 1080), ApexSensitivity.ASPECT_21_9), 0.0, "16:9 needs no bars")
 
 
+func test_player_movement_directions() -> void:
+	check_vec_near(PlayerMovement.wish_direction(0.0, Vector2(0, 1)), Vector3(0, 0, -1), 1e-6, "forward looks down -Z")
+	check_vec_near(PlayerMovement.wish_direction(0.0, Vector2(1, 0)), Vector3(1, 0, 0), 1e-6, "D strafes right")
+	check_vec_near(PlayerMovement.wish_direction(90.0, Vector2(0, 1)), Vector3(-1, 0, 0), 1e-6, "yaw 90 faces left")
+	check_near(PlayerMovement.wish_direction(37.0, Vector2(1, 1)).length(), 1.0, 1e-6, "diagonals are no faster")
+
+
+func test_player_movement_is_frame_rate_independent() -> void:
+	# From standing, 28 m/s² reaches 4.41 m/s in 0.1575 s; after 1 s the player has
+	# covered 4.41 - 4.41 * 0.1575 / 2 = 4.0627 m.
+	for fps in [60.0, 144.0, 500.0]:
+		var velocity := Vector3.ZERO
+		var position := Vector3.ZERO
+		for i in roundi(fps):
+			velocity = PlayerMovement.accelerate(velocity, Vector3.RIGHT, 4.41, 28.0, 1.0 / fps)
+			position += velocity / fps
+		check_near(velocity.x, 4.41, 1e-4, "full walking speed at %d FPS" % fps)
+		check_near(position.x, 4.0627, 0.04, "distance after 1 s at %d FPS" % fps)
+
+
+func test_jump_height_is_frame_rate_independent() -> void:
+	# 5.5 m/s up against 18 m/s² peaks at 5.5² / 36 = 0.840 m and lands after 0.611 s.
+	for fps in [60.0, 144.0, 500.0]:
+		var state := Vector2(0.0, 5.5)
+		var peak := 0.0
+		var airtime := 0.0
+		while true:
+			state = PlayerMovement.fall(state.x, state.y, 18.0, 1.0 / fps)
+			airtime += 1.0 / fps
+			peak = maxf(peak, state.x)
+			if state.x <= 0.0:
+				break
+		check_near(peak, 0.840, 0.01, "jump peak at %d FPS" % fps)
+		check_near(airtime, 0.611, 1.5 / fps, "airtime at %d FPS" % fps)
+		check_eq(state, Vector2.ZERO, "landing stops the fall")
+
+
 func test_ballistics_is_tick_rate_independent() -> void:
 	var gravity := Vector3(0, -9.81, 0)
 	var one := Ballistics.step(Vector3.ZERO, Vector3(0, 0, -500), gravity, 0.2)
