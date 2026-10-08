@@ -5,6 +5,8 @@ The engine report (`reports/Unity vs Godot for aim trainer.md`) picks Godot on t
 - **Test 1** runs automatically on every push (`tools/run_tests.sh` in GitHub Actions).
 - **Tests 2–7** need your PC, and take about an hour in total.
 
+> **Status: closed on 8 October 2026.** Tests 1, 2, 4 and 6 passed, and Godot is confirmed. Tests 3, 5 and 7 weren't run; they are accepted risks and now optional. Results are in [reports/First week test results.md](reports/First%20week%20test%20results.md). The labs stay in the build, so you can still run any test below.
+
 ## Get the build
 
 1. On GitHub, open **Actions → Test and build**, pick the latest green run on this branch, and download **ApexAimLab-windows**.
@@ -97,7 +99,7 @@ The lab starts with 30 strafing dummies and an emitter firing 500 bullets per se
 - **Bullet hit tests** shows how many milliseconds bullet collision costs per physics tick.
 - The **CPU / GPU** line shows where each frame's time goes. If 1% lows dip below your refresh rate, this line says whether the CPU or the graphics card is the limit.
 
-Bullet speed, recoil and bot movement are placeholders, not Apex data yet.
+The lab's own weapon (bullet speed, fire rate, recoil) is a fixed load-test setup, not an Apex weapon.
 
 ### 7. Controllers
 
@@ -110,23 +112,6 @@ In the **Controllers** lab, check that:
 - **Q** and **E** make the controller rumble;
 - on the DualSense, **G** turns the motion sensors on and the gyro numbers change when you tilt the pad. **C** starts and stops calibration.
 
-## Also try: close-range tracking
+## Training scenarios
 
-The menu's **Train** section has the first real scenario.
-
-- Ten targets appear one at a time, 8–15 m away, near where you're looking. They strafe and crouch-spam.
-- Each has purple shields (100) and 100 health. Knock each one as fast as you can.
-- **R** (or **X** on a controller) reloads.
-- The results screen shows average and fastest time to knock, accuracy, headshot rate and damage per magazine. Every session is saved, so it also compares you with your previous runs.
-
-The rifle's numbers, the bullet speed and the bots' movement are placeholders, so judge the *feel*, not the scores:
-- Does aiming at Apex sensitivity feel right?
-- Do bullet travel and hit feedback read clearly?
-- Is anything distracting?
-
-## What to send back
-
-- the zipped logs folder
-- your 360° distances, and the latency frame counts for the build and Apex
-- anything odd: freezes, stutter, crashes, wrong refresh rate, a controller that isn't detected
-- how close-range tracking felt, and your results screen
+The menu's **Train** section has the training scenarios, with Season 30 weapon data. [README.md](README.md#training) describes them, including which numbers are Apex data and which are still placeholders.

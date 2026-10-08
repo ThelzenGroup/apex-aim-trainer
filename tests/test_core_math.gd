@@ -27,6 +27,13 @@ func test_fov_conversion_is_hor_plus() -> void:
 	check_near(ApexSensitivity.vertical_fov(90.0), 73.7398, 1e-3)
 
 
+func test_pillarbox_to_21_9() -> void:
+	check_near(ApexSensitivity.pillarbox_width(Vector2(3840, 1080), ApexSensitivity.ASPECT_21_9), 640.0, 1e-3,
+		"32:9 at 1080p keeps the middle 2560 pixels")
+	check_eq(ApexSensitivity.pillarbox_width(Vector2(2560, 1080), ApexSensitivity.ASPECT_21_9), 0.0, "21:9 needs no bars")
+	check_eq(ApexSensitivity.pillarbox_width(Vector2(1920, 1080), ApexSensitivity.ASPECT_21_9), 0.0, "16:9 needs no bars")
+
+
 func test_ballistics_is_tick_rate_independent() -> void:
 	var gravity := Vector3(0, -9.81, 0)
 	var one := Ballistics.step(Vector3.ZERO, Vector3(0, 0, -500), gravity, 0.2)

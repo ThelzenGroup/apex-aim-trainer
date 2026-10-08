@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="ScenarioConfig" format=3]
+
+[ext_resource type="Script" path="res://src/scenario/scenario_config.gd" id="1_config"]
+[ext_resource type="Resource" path="res://data/weapons/r301.tres" id="2_weapon"]
+
+[resource]
+script = ExtResource("1_config")
+id = "mid_range_r301"
+title = "Mid-range tracking (R-301)"
+description = "Ten strafing targets at 20–35 m with purple shields. Bullet travel time starts to matter."
+weapon = ExtResource("2_weapon")
+magazine_level = 3
+target_count = 10
+shield_tier = "purple"
+distance_min = 20.0
+distance_max = 35.0
+spread_degrees = 15.0
+sizes = PackedStringArray("small", "medium", "large")
+strafe_speed = 4.41
+crouch_speed = 2.04
+strafe_width = 4.0

@@ -45,6 +45,8 @@ func _ready() -> void:
 		_refresh())
 	box.add_child(vrr)
 	_check("Accumulated mouse input", "accumulated_input")
+	_check("Limit view to 21:9", "limit_to_21_9").tooltip_text = \
+		"For screens wider than 21:9 (such as 32:9): black bars at the sides, the way some players report Apex shows these screens."
 
 	_section(box, "Latency (applies after restart)")
 	var drivers := {}
@@ -115,7 +117,7 @@ func _spin_custom(text: String, min_value: float, max_value: float, step: float,
 	return spin
 
 
-func _check(text: String, key: String) -> void:
+func _check(text: String, key: String) -> CheckBox:
 	var box := CheckBox.new()
 	box.button_pressed = Settings.get(key)
 	box.set_meta("getter", func() -> bool: return Settings.get(key))
@@ -123,6 +125,7 @@ func _check(text: String, key: String) -> void:
 		Settings.set(key, on)
 		Settings.save())
 	_row(text, box)
+	return box
 
 
 func _option(text: String, key: String, choices: Dictionary) -> void:

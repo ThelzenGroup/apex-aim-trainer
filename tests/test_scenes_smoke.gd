@@ -40,3 +40,22 @@ func test_load_lab_hits_bots() -> void:
 	check(total > 0, "emitter bullets hit bots (%d hits)" % total)
 	lab.queue_free()
 	await tree.process_frame
+
+
+func test_pillarbox_follows_the_setting() -> void:
+	var viewport := SubViewport.new()
+	viewport.size = Vector2i(3840, 1080)
+	tree.root.add_child(viewport)
+	var pillarbox := Pillarbox.new()
+	viewport.add_child(pillarbox)
+	var was := Settings.limit_to_21_9
+	Settings.limit_to_21_9 = true
+	Settings.changed.emit()
+	check_near(pillarbox.bar_width(), 640.0, 0.01, "32:9 is limited to the middle 21:9")
+	Settings.limit_to_21_9 = false
+	Settings.changed.emit()
+	check_eq(pillarbox.bar_width(), 0.0, "no bars with the setting off")
+	Settings.limit_to_21_9 = was
+	Settings.changed.emit()
+	viewport.queue_free()
+	await tree.process_frame

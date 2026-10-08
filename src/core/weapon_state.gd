@@ -5,16 +5,19 @@ extends RefCounted
 
 var fire_interval: float
 var magazine_size: int
-var reload_time: float
+var tactical_reload: float
+var empty_reload: float
 var ammo: int
 var reload_left := 0.0
 var _cooldown := 0.0
 
 
-func _init(fire_rate: float, p_magazine_size: int, p_reload_time: float) -> void:
+## `p_empty_reload` is the longer reload from an empty magazine; it defaults to the tactical one.
+func _init(fire_rate: float, p_magazine_size: int, p_tactical_reload: float, p_empty_reload: float = -1.0) -> void:
 	fire_interval = 1.0 / fire_rate
 	magazine_size = p_magazine_size
-	reload_time = p_reload_time
+	tactical_reload = p_tactical_reload
+	empty_reload = p_empty_reload if p_empty_reload >= 0.0 else p_tactical_reload
 	ammo = magazine_size
 
 
@@ -24,7 +27,7 @@ func is_reloading() -> bool:
 
 func start_reload() -> void:
 	if ammo < magazine_size and not is_reloading():
-		reload_left = reload_time
+		reload_left = empty_reload if ammo == 0 else tactical_reload
 
 
 ## Advances `delta` seconds with the trigger held or released. Firing on an empty

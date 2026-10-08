@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="WeaponStats" format=3]
+
+[ext_resource type="Script" path="res://src/game/weapon_stats.gd" id="1_stats"]
+
+[resource]
+script = ExtResource("1_stats")
+display_name = "Volt SMG"
+source = "apexseasons.online weapon stats, Season 30 (checked 2026-10-03)."
+placeholder_fields = PackedStringArray("recoil pattern", "bullet drop", "bullet speed")
+body_damage = 15.0
+head_damage = 19.0
+limb_damage = 12.0
+rpm = 720.0
+magazine_sizes = PackedInt32Array(19, 21, 23, 26)
+tactical_reload = 1.44
+empty_reload = 2.03
+bullet_speed_units = 25000.0
+bullet_gravity = 9.81
+recoil = PackedVector2Array(0, 0.45, 0.1, 0.4, -0.12, 0.35, 0.15, 0.3, -0.1, 0.25)

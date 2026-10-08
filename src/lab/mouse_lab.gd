@@ -107,7 +107,7 @@ func _process(_delta: float) -> void:
 		"Apex sensitivity %.3f at %d DPI → %.5f° per count → %.2f cm per 360°" % [
 			Settings.sensitivity, Settings.dpi, dpc, ApexSensitivity.cm_per_360(Settings.sensitivity, Settings.dpi)],
 		"FOV: cl_fovScale %.4f = %.2f° at 4:3, %.2f° horizontal on this screen" % [
-			Settings.fov_scale, Settings.fov_4_3(), ApexSensitivity.horizontal_fov(Settings.fov_4_3(), size.x / size.y)],
+			Settings.fov_scale, Settings.fov_4_3(), ApexSensitivity.horizontal_fov(Settings.fov_4_3(), Settings.view_aspect(size))],
 		"",
 		"Raw counts since reset: x %d, y %d" % [look.total_counts.x, look.total_counts.y],
 		"Turned right: %.3f° (%.4f turns)" % [0.0 - look.yaw + 0.0, (0.0 - look.yaw + 0.0) / 360.0],

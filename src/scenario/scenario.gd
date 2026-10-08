@@ -4,7 +4,7 @@ extends Lab
 ## knock each one as fast as you can. Scored on time to knock, accuracy, headshots and
 ## damage per magazine, and every session is saved so you can compare runs.
 
-const DEFAULT_CONFIG := "res://data/scenarios/close_range_tracking.tres"
+const DEFAULT_CONFIG := "res://data/scenarios/close_range_r99.tres"
 const COUNTDOWN := 3.0
 const NEXT_TARGET_DELAY := 0.5
 const REMOVE_KNOCKED_AFTER := 1.5
@@ -76,8 +76,10 @@ func restart() -> void:
 		target.queue_free()
 		target = null
 	projectiles.bots.clear()
-	stats = SessionStats.new(config.weapon.magazine_size)
-	_weapon = WeaponState.new(config.weapon.fire_rate, config.weapon.magazine_size, config.weapon.reload_time)
+	var w := config.weapon
+	var magazine := w.magazine(config.magazine_level)
+	stats = SessionStats.new(magazine)
+	_weapon = WeaponState.new(w.fire_rate(), magazine, w.tactical_reload, w.empty_reload)
 	_recoil = RecoilPattern.new(config.weapon.recoil)
 	_clock = 0.0
 	_countdown = COUNTDOWN
@@ -138,7 +140,7 @@ func _update_weapon(delta: float) -> void:
 		_shot = 0
 	for i in shots:
 		# Each shot leaves along the view as it is after the previous shot's kick.
-		projectiles.fire(look.camera.global_position, -look.camera.global_basis.z * config.weapon.bullet_speed, true)
+		projectiles.fire(look.camera.global_position, -look.camera.global_basis.z * config.weapon.bullet_speed(), true)
 		look.kick(_recoil.kick(_shot))
 		_shot += 1
 		_since_shot = 0.0
@@ -169,9 +171,8 @@ func _spawn_target() -> void:
 func _on_hit(bot: Bot, shape: DummyHitboxes.Shape, point: Vector3, from_player: bool) -> void:
 	if bot != target or not from_player or state != State.RUNNING:
 		return
-	var weapon := config.weapon
 	var shield_color: Color = ApexDamage.SHIELD_COLORS[bot.shield_tier] if bot.shield > 0.0 else Color.WHITE
-	var result := bot.take_damage(weapon.damage * ApexDamage.multiplier(shape.region, weapon.headshot_multiplier, weapon.limb_multiplier))
+	var result := bot.take_damage(config.weapon.damage_for(shape.region))
 	var dealt: float = result["shield_damage"] + result["health_damage"]
 	stats.record_hit(shape.region, dealt)
 	if not _target_hit:
@@ -226,7 +227,7 @@ func _results_text(summary: Dictionary, sessions: Array) -> String:
 		"Accuracy                %.1f%%" % (summary["accuracy"] * 100.0),
 		"Headshots               %.1f%% of hits" % (summary["headshot_rate"] * 100.0),
 		"Damage per magazine     %d of %d possible with body shots" % [
-			summary["damage_per_magazine"], weapon.damage * weapon.magazine_size],
+			summary["damage_per_magazine"], weapon.body_damage * _weapon.magazine_size],
 		"Shots %d · hits %d · session %.1f s" % [summary["shots"], summary["hits"], summary["duration"]],
 		"",
 		"Recent sessions (time to knock · accuracy):",
@@ -234,8 +235,9 @@ func _results_text(summary: Dictionary, sessions: Array) -> String:
 	for session: Dictionary in sessions.slice(-5):
 		lines.append("  %s   %.2f s · %.0f%%" % [
 			str(session.get("date", "")).replace("T", " "), session.get("avg_time_to_knock", 0.0), session.get("accuracy", 0.0) * 100.0])
-	if weapon.placeholder:
-		lines.append_array(["", "Weapon numbers are placeholders, not Apex data yet."])
+	lines.append_array(["", "Weapon data: " + weapon.source])
+	if not weapon.placeholder_fields.is_empty():
+		lines.append(weapon.placeholder_note())
 	return "\n".join(lines)
 
 

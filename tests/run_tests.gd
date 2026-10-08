@@ -20,7 +20,13 @@ func _run() -> void:
 	var failed := 0
 	var passed := 0
 	for file: String in files:
-		var case: TestCase = load("res://tests/" + file).new()
+		# A test file that doesn't parse would otherwise stop the run here and never quit.
+		var script: GDScript = load("res://tests/" + file)
+		if script == null or not script.can_instantiate():
+			printerr("FAIL %s doesn't load" % file)
+			failed += 1
+			continue
+		var case: TestCase = script.new()
 		case.tree = self
 		for method in case.get_method_list():
 			var name: String = method["name"]

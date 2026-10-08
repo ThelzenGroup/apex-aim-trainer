@@ -12,6 +12,7 @@ const TARGET_GROUP := "aim_assist_targets"
 const PITCH_LIMIT := 89.0
 
 var camera: Camera3D
+var pillarbox: Pillarbox
 var yaw := 0.0  ## Degrees, unwrapped, so it also counts full turns.
 var pitch := 0.0
 var total_counts := Vector2.ZERO  ## Raw mouse counts since reset_counters().
@@ -25,6 +26,8 @@ func _ready() -> void:
 	camera = Camera3D.new()
 	add_child(camera)
 	camera.current = true
+	pillarbox = Pillarbox.new()
+	add_child(pillarbox)
 	_update_fov()
 	Settings.changed.connect(_update_fov)
 	_apply()

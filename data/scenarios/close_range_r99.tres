@@ -1,20 +1,21 @@
 [gd_resource type="Resource" script_class="ScenarioConfig" format=3]
 
 [ext_resource type="Script" path="res://src/scenario/scenario_config.gd" id="1_config"]
-[ext_resource type="Resource" path="res://data/weapons/placeholder_rifle.tres" id="2_weapon"]
+[ext_resource type="Resource" path="res://data/weapons/r99.tres" id="2_weapon"]
 
 [resource]
 script = ExtResource("1_config")
-id = "close_range_tracking"
-title = "Close-range tracking"
+id = "close_range_r99"
+title = "Close-range tracking (R-99)"
 description = "Ten strafing targets at 8–15 m with purple shields. Knock each one as fast as you can."
 weapon = ExtResource("2_weapon")
+magazine_level = 3
 target_count = 10
 shield_tier = "purple"
 distance_min = 8.0
 distance_max = 15.0
 spread_degrees = 25.0
 sizes = PackedStringArray("small", "medium", "large")
-strafe_speed = 4.2
-crouch_speed = 2.0
+strafe_speed = 4.41
+crouch_speed = 2.04
 strafe_width = 3.0

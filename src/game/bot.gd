@@ -3,8 +3,9 @@ extends Node3D
 ## An ADAD-strafing target dummy that faces the player, with Apex health and shields.
 ##
 ## The movement is a stand-in for Apex movement: it flips strafe direction at random
-## intervals, accelerates like a player, and sometimes crouch-spams or jumps. Speeds are
-## placeholders until they are measured from Apex footage.
+## intervals, accelerates like a player, and sometimes crouch-spams or jumps. The strafe
+## and crouch speeds are Apex's (see ScenarioConfig); acceleration, jump height and the
+## timing of direction changes are placeholders until they are measured from Apex footage.
 
 signal knocked_down
 
@@ -12,8 +13,8 @@ const LOOPING_CLIPS := ["Idle", "Jog", "Sprint", "Strafe_Left", "Strafe_Right", 
 	"Crouch_Fwd", "Crouch_Strafe_Left", "Crouch_Strafe_Right", "Jump", "Slide"]
 const BLEND := 0.12
 
-@export var strafe_speed := 4.2  ## m/s
-@export var crouch_speed := 2.0
+@export var strafe_speed := 4.41  ## m/s; see ScenarioConfig
+@export var crouch_speed := 2.04
 @export var acceleration := 28.0  ## m/s²
 @export var strafe_width := 3.0  ## How far the bot may drift from its spawn point, in metres.
 @export var gravity := 18.0

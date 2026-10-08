@@ -46,3 +46,14 @@ static func vertical_fov(fov_4_3: float) -> float:
 ## Horizontal FOV seen on a screen with the given aspect ratio.
 static func horizontal_fov(fov_4_3: float, aspect: float) -> float:
 	return rad_to_deg(2.0 * atan(tan(deg_to_rad(fov_4_3) / 2.0) * aspect * 3.0 / 4.0))
+
+
+## 21:9 as 2560×1080 monitors define it.
+const ASPECT_21_9 := 64.0 / 27.0
+
+
+## Width of each black bar when a screen wider than `max_aspect` is limited to it. Apex
+## keeps the vertical FOV fixed, so the picture between the bars is exactly what a
+## `max_aspect` screen of the same height shows.
+static func pillarbox_width(screen: Vector2, max_aspect: float) -> float:
+	return maxf((screen.x - screen.y * max_aspect) / 2.0, 0.0)

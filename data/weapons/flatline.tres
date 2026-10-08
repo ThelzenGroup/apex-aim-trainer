@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="WeaponStats" format=3]
+
+[ext_resource type="Script" path="res://src/game/weapon_stats.gd" id="1_stats"]
+
+[resource]
+script = ExtResource("1_stats")
+display_name = "VK-47 Flatline"
+source = "apexseasons.online weapon stats, Season 30 (checked 2026-10-03); projectile speed from community stats tables."
+placeholder_fields = PackedStringArray("recoil pattern", "bullet drop")
+body_damage = 18.0
+head_damage = 32.0
+limb_damage = 15.0
+rpm = 600.0
+magazine_sizes = PackedInt32Array(20, 25, 28, 30)
+tactical_reload = 2.4
+empty_reload = 3.1
+bullet_speed_units = 26000.0
+bullet_gravity = 9.81
+recoil = PackedVector2Array(0, 0.45, 0.1, 0.4, -0.12, 0.35, 0.15, 0.3, -0.1, 0.25)

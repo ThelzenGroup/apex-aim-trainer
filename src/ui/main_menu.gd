@@ -2,7 +2,12 @@ extends Control
 ## Start screen. The system summary at the top is test 2 (launch check): it should name
 ## your GPU, the renderer you picked and your monitor's real refresh rate.
 
-const SCENARIOS := ["res://data/scenarios/close_range_tracking.tres"]
+const SCENARIOS := [
+	"res://data/scenarios/close_range_r99.tres",
+	"res://data/scenarios/close_range_volt.tres",
+	"res://data/scenarios/mid_range_r301.tres",
+	"res://data/scenarios/mid_range_flatline.tres",
+]
 const LABS := [
 	["Mouse lab: sensitivity and polling rate (tests 3 and 4)", "res://scenes/lab/mouse_lab.tscn"],
 	["Latency flash: click-to-photon (test 5)", "res://scenes/lab/latency_lab.tscn"],

@@ -13,7 +13,7 @@ const SAVED := {
 	"controller": ["stick_deadzone", "stick_outer", "stick_exponent", "yaw_speed", "pitch_speed",
 		"extra_yaw", "extra_pitch", "ramp_delay", "ramp_time",
 		"aim_assist", "aim_assist_slowdown", "aim_assist_strength", "aim_assist_inner", "aim_assist_outer"],
-	"display": ["window_mode", "vsync_mode", "max_fps", "accumulated_input"],
+	"display": ["window_mode", "vsync_mode", "max_fps", "accumulated_input", "limit_to_21_9"],
 	"startup": ["rendering_driver", "swapchain_images", "frame_queue"],
 }
 const WINDOW_MODES := {
@@ -56,6 +56,8 @@ var window_mode := DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
 var vsync_mode := DisplayServer.VSYNC_DISABLED
 var max_fps := 0
 var accumulated_input := true
+## Black bars down to 21:9 on wider screens, for players whose Apex shows 21:9 there.
+var limit_to_21_9 := false
 
 # Read only at startup.
 var rendering_driver := "d3d12"
@@ -101,6 +103,12 @@ func fov_4_3() -> float:
 
 func vertical_fov() -> float:
 	return ApexSensitivity.vertical_fov(fov_4_3())
+
+
+## Aspect ratio of the 3D view on a screen of `size`, after any 21:9 limit.
+func view_aspect(size: Vector2) -> float:
+	var aspect := size.x / size.y
+	return minf(aspect, ApexSensitivity.ASPECT_21_9) if limit_to_21_9 else aspect
 
 
 ## The frame cap Godot's docs recommend for variable-refresh monitors: just under the

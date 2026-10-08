@@ -1,7 +1,8 @@
 class_name ApexDamage
-## Apex's health model: 100 health behind an armour shield (white 50, blue 75, purple 100,
-## red 125). Shields absorb damage first, and the rest of a shot that breaks the shield
-## carries through to health. Helmets and legend perks are not modelled yet.
+## Apex's health model: 100 health behind armour (levels 1–4 add 50, 75, 100 and 125;
+## since 2024 the armour is built in and levels up with EVO points). Armour absorbs damage
+## first, and the rest of a shot that breaks it carries through to health. Helmets and
+## legend perks are not modelled yet.
 
 const HEALTH := 100.0
 const SHIELDS := {"none": 0.0, "white": 50.0, "blue": 75.0, "purple": 100.0, "red": 125.0}
@@ -12,16 +13,6 @@ const SHIELD_COLORS := {
 	"purple": Color(0.7, 0.35, 1.0),
 	"red": Color(1.0, 0.3, 0.3),
 }
-
-
-## Damage multiplier for the hitbox region a shot landed on.
-static func multiplier(region: String, headshot_multiplier: float, limb_multiplier: float) -> float:
-	match region:
-		"head":
-			return headshot_multiplier
-		"limb":
-			return limb_multiplier
-	return 1.0
 
 
 ## Shield and health after `damage`: Vector2(shield, health).

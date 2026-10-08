@@ -36,5 +36,5 @@ godot --headless --path . --export-release "Windows" build/windows/ApexAimLab.ex
   - Add new scenarios to `SCENARIOS` in `main_menu.gd`. Exported builds can't list `res://` folders reliably, because of `.remap` files.
   - `Scenario.force_trigger` and `ScenarioHistory.folder` exist for automated tests.
 - **Hits** are analytic: `DummyHitboxes` plus `HitTest`, using the `HB_*` nodes and glTF extras from the bot models. Physics bodies are not used for hits.
-- **Placeholder numbers** are marked as such in the code: bullet speed, recoil, bot speeds and aim-assist strength. Don't present them as Apex data.
+- **Weapon data** in `data/weapons/` is Apex Season 30 data. Each file names its `source`, and `placeholder_fields` lists what is not Apex data yet: recoil patterns, bullet drop, and the Volt's bullet speed. Other placeholders are marked in the code: bot acceleration and strafe timing, and aim-assist strength. Don't present them as Apex data.
 - **Startup-only settings** (renderer, swapchain, frame queue) are written to `override.cfg` by `Settings.apply_startup_and_restart()`.
